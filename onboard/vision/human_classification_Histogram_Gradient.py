@@ -31,6 +31,7 @@ while(True):
     # returns the bounding boxes for the detected objects
     boxes, weights = hog.detectMultiScale(frame, winStride=(8,8) )
     print(len(boxes))
+    print(boxes)
 
     boxes = np.array([[x, y, x + w, y + h] for (x, y, w, h) in boxes])
 
