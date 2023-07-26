@@ -94,6 +94,8 @@ class Drone:
         distancetopoint = self.get_distance_metres(self.vehicle.location.global_frame, targetWaypointLocation)
         return distancetopoint
 
+    def get_altitude(self):
+        pass
 
     def download_mission(self):
         """

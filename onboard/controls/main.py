@@ -9,7 +9,7 @@ from pymavlink import mavutil
 #Set up option parsing to get connection string
 import argparse
 
-from DroneProject.onboard.controls.drone import Drone  
+from drone import Drone  
 
 print('Create a new mission (for current location)')
 vehicle = Drone()
