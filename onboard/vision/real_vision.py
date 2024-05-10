@@ -2,25 +2,16 @@ import numpy as np
 import cv2
 #from human_classification import Human_Classify
 
-hog = cv2.HOGDescriptor()
-hog.setSVMDetector(cv2.HOGDescriptor_getDefaultPeopleDetector())
+def change_resolution(cap, rate_a, rate_b):
+    cap.set(3, rate_a)
+    cap.set(4, rate_b)
 
-cv2.startWindowThread()
-
-# open webcam video stream
-cap = cv2.VideoCapture(0)
-
-# the output will be written to output.avi
-out = cv2.VideoWriter(
-    'output.avi',
-    cv2.VideoWriter_fourcc(*'MJPG'),
-    15.,
-    (640,480))
+    return cap
 
 class Human_Classify:
     measured_distance = 20
     real_width = 6
-    ref_image = "ref_ped.jpg"
+    ref_image = "Reasources/ref_ped.jpg"
 
     def __init__(self, cap, out, hog):
         self.hog = hog
@@ -67,7 +58,15 @@ class Human_Classify:
     def find_human_data(self, hog, image):
         human_width = 0
 
-        gray = cv2.cvtColor(image, cv2.COLOR_RGB2GRAY)
+        try:
+            gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+
+        except:
+            gray = image
+
+        cv2.imshow("image", gray)
+            
+
 
         # detect people in the image
         # returns the bounding boxes for the detected objects
@@ -99,6 +98,7 @@ class Human_Classify:
 
     def Focal_Length_Finder(self):
         ref_image = cv2.imread(self.ref_image)
+        ref_image = cv2.resize(ref_image, (300,200))
   
         
         ref_image_face_width = self.find_human_data(self.hog, ref_image)
@@ -110,6 +110,29 @@ class Human_Classify:
     def distance_finder(self, Focal_Length, face_width_in_frame):
         distance = (self.real_width * Focal_Length)/face_width_in_frame
         return distance
+
+
+    
+hog = cv2.HOGDescriptor()
+hog.setSVMDetector(cv2.HOGDescriptor_getDefaultPeopleDetector())
+
+cv2.startWindowThread()
+
+# open webcam video stream
+c = cv2.VideoCapture(0)
+cap = change_resolution(c, 640, 480)
+
+
+# the output will be written to output.avi
+out = cv2.VideoWriter(
+    'output.avi',
+    cv2.VideoWriter_fourcc(*'MJPG'),
+    15.,
+    (640,480))
+
+
+
+
 
 human_classifier = Human_Classify(cap, out, hog)
 
